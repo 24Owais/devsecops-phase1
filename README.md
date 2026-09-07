@@ -1,22 +1,20 @@
-# DevSecOps Phase 1: Secure Containerized Flask Service
+# DevSecOps Pipeline: Container & IaC Security Automation
 
-A security-hardened Flask application containerized with Docker and verified through an automated DevSecOps CI/CD pipeline using GitHub Actions and Trivy.
+A robust DevSecOps pipeline automating both container security and Infrastructure as Code (IaC) compliance using GitHub Actions, Trivy, and Checkov.
 
-## Features
+## Architecture & Security Gates
 
-* **Application Stack:** Python Flask application served via Gunicorn.
-* **Multi-Stage Build:** Optimized Docker build process separating dependencies from the runtime environment.
-* **Non-Root Runtime:** Runs under a dedicated `appuser` context to enforce least-privilege security principles.
-* **Automated Security Scanning:** GitHub Actions pipeline running Aqua Security's Trivy scanner on every commit.
+1. **Phase 1: Container Hardening (Trivy)**
+   - **App:** Flask + Gunicorn web service.
+   - **Security:** Multi-stage build running under a non-root `appuser`.
+   - **Scanner:** Trivy blocks builds containing `CRITICAL` or `HIGH` Python/OS vulnerabilities.
 
-## Project Structure
+2. **Phase 2: IaC Compliance (Checkov)**
+   - **IaC:** Hardened AWS S3 bucket configured via Terraform.
+   - **Security:** Enforced Server-Side Encryption (AES256), Public Access Block, Bucket Versioning, and Lifecycle Rules.
+   - **Scanner:** Checkov statically audits Terraform files to block misconfigured cloud resources before deployment.
 
-```text
-devsecops-phase1/
-├── .github/
-│   └── workflows/
-│       └── container-scan.yml   # CI/CD security scan pipeline
-├── app.py                       # Flask application
-├── Dockerfile                   # Multi-stage non-root Docker build
-├── requirements.txt             # Pinned dependencies
-└── README.md                    # Documentation
+## Pipeline Workflows
+
+- `.github/workflows/container-scan.yml` — Builds Docker image and executes Trivy scanner.
+- `.github/workflows/iac-scan.yml` — Scans `terraform/` directory using Checkov.
