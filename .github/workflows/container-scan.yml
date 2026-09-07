@@ -17,11 +17,11 @@ jobs:
       - name: Build Docker Image
         run: docker build -t user-api:${{ github.sha }} .
 
-- name: Run Trivy Vulnerability Scanner
+      - name: Run Trivy Vulnerability Scanner
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'user-api:${{ github.sha }}'
           format: 'table'
           exit-code: '1'
-          ignore-unfixed: true   # <--- ADD THIS LINE
+          ignore-unfixed: true
           severity: 'CRITICAL,HIGH'
