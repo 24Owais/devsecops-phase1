@@ -4,12 +4,15 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir --user -r requirements.txt
 
-# Final runtime stage
+# Runtime stage
 FROM python:3.11-slim AS runner
 WORKDIR /app
+
+# Upgrade system python tools to patch vendor vulnerabilities
+RUN pip install --no-cache-dir --upgrade setuptools wheel
+
 RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 
-# Copy installed dependencies from builder
 COPY --from=builder /root/.local /home/appuser/.local
 COPY app.py .
 
