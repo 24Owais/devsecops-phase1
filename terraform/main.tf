@@ -50,7 +50,7 @@ resource "aws_s3_bucket_versioning" "app_logs_versioning" {
   }
 }
 
-# 4. Lifecycle Configuration (Solves CKV2_AWS_61)
+# 4. Lifecycle Configuration
 resource "aws_s3_bucket_lifecycle_configuration" "app_logs_lifecycle" {
   bucket = aws_s3_bucket.app_logs.id
 
@@ -60,6 +60,11 @@ resource "aws_s3_bucket_lifecycle_configuration" "app_logs_lifecycle" {
 
     expiration {
       days = 90
+    }
+
+    # Clears CKV_AWS_300
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 7
     }
   }
 }
