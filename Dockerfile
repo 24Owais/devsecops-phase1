@@ -1,5 +1,6 @@
 # Stage 1: Build dependencies
-FROM python:3.11-slim AS builder
+# Change from python:3.11-slim to an updated patch tag or modern slim image
+FROM python:3.11.8-slim AS builder
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --user --no-cache-dir -r requirements.txt
